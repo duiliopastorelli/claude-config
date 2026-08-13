@@ -1,7 +1,8 @@
-*.log
-*.tmp
-.DS_Store
-agent-memory/
-scheduled_tasks.json
-CLAUDE.md
-settings.json
+# Ignore everything
+*
+
+# Except CLAUDE.md and agents/
+!CLAUDE.md
+!agents/
+!agents/**
+!README.md
