@@ -1,111 +1,73 @@
 # claude-config
 
-Public repository of Claude Code agent definitions for an "olof" workspace (One Life One Folder).
-Agent files are prompt text — no secrets, credentials, or personal data live here.
+Public repository of Claude Code agent definitions designed for creating a team of agents.
+
+## Why use this repository
+
+The scope of this repository is to provide an out-of-the-box starting point for working with a team of agents serving general needs of an AI PM.
+
+This repo is supposed to be cloned within the user's home folder. Doing so will apply these agents hierarchically above any other Claude instance. For example, running Claude within a `[myProject]` folder will automatically inherith all the agents created at a home folder level. This also allows the agents to improve themselves as they get used.
+
+For users not experienced in Git commands, I recommend to use Claude to clone this repository within the home directory: it will generate an error, and Cloude will propose how to work around it.
+
+There are 2 approaches that you can adopt:
+- clone the official repository from duiliopastorelli's aacount - you won't be able to backup in Git on the remote branch any of your changes and improvements to the agents;
+- fork the repository in your own account and then clone it from there - you will own it, allowing you to save any change or improvement you done.
+
+## How agents are structured
+
+Above all the specialised agents provided in this repository sits a coordinator (HAL). The coordinator is the only agent that is allowed to communicate directly with the user. The user can comunicate directly with specialised agents, if wanted, but it's discouraged, as specific automatic triggers assuring quality and self-improvement won't be available this way.
+
+Once a specialised agent finishes its task(s) it communicates with other sub agents (if needed) or report back to the coordinato (in case of completion or if further input needed). A retrospective mechanism assure that when the user complains about an unexpected behaviour from any agent (including the coordinator), then a process of analysis and process improvement is triggered, leading to the suggestion of modification of the specific agent .md file. The user stays in control of this process.
+
+## How the folder structure is organised
+
+This repository is supposed to be extracted (cloned) in the user's folder (~). This assures that any instance of Cloud run in any other folder still will utilise all the agents available.
+
+### The general PM work
+
+A setup that I found beneficial as PM is the "olof" (One Life One Folder). PM usually work with a lot of interconnected documents, all backed up in some cloud services (like GDrive or OneDrive). The agents expect that this work is done in a folder "olof" that contains at minimum the following sub-folders:
+- team-inbox/ - where the user drops files to be consumed by the agents team. These file are moved in its own archive (within the folder itself) after consumption.
+- deliverables/ - where the agents will put the files that they create, for the user's evaluation.
+- knowledge-base/ - a wiki-like space where notes are kept and organised. A specific agent (librarian-agent) is responsible to organise and maintain this folder.
+
+### The work that involves Git tracking
+
+Projects that are tracked in Git (like software apps) should not reside in a folder synced by services like GDrive and OneDrive. Instead, they should be in a folder outside "olof". Run Claude directly from there, thanks to the agents living in the user's folder (~) they will all be triggered anyway.
 
 ## What's in this repo
 
+- CLAUDE.md - the file that Claude uses as an entry point for the user-generated instructions
 - `agents/*.md` — one file per Claude Code sub-agent (HR-agent, Librarian-agent, etc.)
-- `.gitignore` — excludes all machine-local and secret material
+- `.gitignore` — excludes everything that is not used by Claude
+
+## Commands
+
+`sync agents` or `update agents` are Claude commands described in the HR-agent to retrieve any update from the repository and push any changes. Can be run in a scheduled way to receive the latest and greatest from the repository and keep everything in sync. The push function works only if the user owns the repository (fork).
+
+Is the responsibility of the HR-agent to push changes to the repository when appropriate.
 
 ## Setting up a fresh machine
 
 These steps configure a new machine to use this shared agent set.
-An agent (HR-agent) can run them after `gh` and Claude Code are installed.
-
-## Commands
-
-`sync-agents` is a terminal alias to retrieve any update from the repository. Can be run in a scheduled way to receive the latest and greatest from the repository.
-
-Is the responsibility of the HR-agent to push changes to the repository when appropriate.
 
 ### Prerequisites
 
-- Claude Code installed (via the desktop app or `npm install -g @anthropic-ai/claude-code`)
+- Claude Code installed (via the desktop app or `npm install -g @anthropic-ai/claude-code` or other appropriate way)
 - GitHub CLI installed (`brew install gh`) and authenticated (`gh auth login`)
-- `ANTHROPIC_API_KEY` set in `~/.claude/settings.json` (do this manually — never commit it)
+- Optional: `ANTHROPIC_API_KEY` set in `~/.claude/settings.json` (do this manually — never commit it)
 
-### 1. Clone this repo
+### Abtain the agents
 
-```bash
-mkdir -p ~/dev && cd ~/dev
-git clone https://github.com/duiliopastorelli/claude-config.git
-```
+Ask Claude to clone this repository inside your user folder. Follow the instructions.
 
-### 2. Create the olof working root
+### Create the environment
 
-The olof folder is supposed to be backed up by a cloud storage service. The following options cover the most popular providers. Choose the appropriate one.
+Create somewhere within your backup service coverage an "olof" folder with the following sub folders:
+- team-inbox/
+- deliverables/
+- knowledge-base/
 
-**OneDrive:**
-```bash
-OLOF="$HOME/Library/CloudStorage/OneDrive-[ACCOUNT]/olof"
-```
+### Test the environment
 
-**GDrive:**
-```bash
-OLOF="$HOME/Library/CloudStorage/GoogleDrive-[ACCOUNT]/My Drive/olof"
-```
-
-```bash
-mkdir -p "$OLOF/.claude/agent-memory"
-mkdir -p "$OLOF/knowledge-base"
-mkdir -p "$OLOF/deliverables"
-mkdir -p "$OLOF/team-inbox"
-```
-
-### 3. Symlink agents into the workspace
-
-```bash
-ln -s ~/dev/claude-config/agents "$OLOF/.claude/agents"
-# Verify:
-ls -la "$OLOF/.claude/"   # should show: agents -> /Users/.../dev/claude-config/agents
-```
-
-### 4. Add the session-local .gitignore
-
-```bash
-printf 'scheduled_tasks.json\nagent-memory/\n' > "$OLOF/.claude/.gitignore"
-```
-
-### 5. Create CLAUDE.md for this machine
-
-Copy the CLAUDE.md from the other machine as a starting point, then edit the machine-specific
-sections:
-- Cloud path (`OLOF` variable above)
-- Task tracker reference (Node/Express or custom tracker TBD depending on user's needs)
-- Knowledge-base description (work vault vs personal vault)
-- Remove or update any context specific to the other machine
-
-### 6. Add sync alias to `.zshrc`
-
-```bash
-echo "alias sync-agents='cd ~/dev/claude-config && git pull'" >> ~/.zshrc
-source ~/.zshrc
-```
-
-## Syncing agent changes
-
-Agent updates are written by HR-agent as normal. To propagate to the other machines:
-
-**After an update on any machine:**
-```bash
-cd ~/dev/claude-config
-git add agents/
-git commit -m "Update [agent-name]: [brief reason]"
-git push
-```
-
-**On the other machine (run before a session or via alias):**
-```bash
-sync-agents   # alias for: cd ~/dev/claude-config && git pull
-```
-
-## What does NOT live in this repo
-
-| Item | Location | Why |
-|---|---|---|
-| `agent-memory/` | `olof/.claude/agent-memory/` | Machine-local; work and personal memory should diverge |
-| `scheduled_tasks.json` | `olof/.claude/` | Session-ephemeral |
-| `CLAUDE.md` | `olof/` root | Machine-specific context |
-| `~/.claude/settings.json` | `~/.claude/` | Contains auth tokens |
-| `knowledge-base/` | `olof/knowledge-base/` | Intentionally separate vaults per machine |
+Run Claude within the "olof" folder and ask it to perform a test for all the agents and to report any incongruence or issue found.
