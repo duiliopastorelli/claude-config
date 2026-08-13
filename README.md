@@ -1,6 +1,6 @@
 # claude-config
 
-Public repository of Claude Code agent definitions for the olof workspace.
+Public repository of Claude Code agent definitions for an "olof" workspace (Onle Life One Folder).
 Agent files are prompt text — no secrets, credentials, or personal data live here.
 
 ## What's in this repo
@@ -28,12 +28,12 @@ git clone https://github.com/duiliopastorelli/claude-config.git
 
 ### 2. Create the olof working root
 
-**Work Mac (OneDrive):**
+**OneDrive:**
 ```bash
-OLOF="$HOME/Library/CloudStorage/OneDrive-SAPSE/olof"
+OLOF="$HOME/Library/CloudStorage/OneDrive-[ACCOUNT]/olof"
 ```
 
-**Personal Mac (GDrive):**
+**GDrive:**
 ```bash
 OLOF="$HOME/Library/CloudStorage/GoogleDrive-[ACCOUNT]/My Drive/olof"
 ```
@@ -64,9 +64,9 @@ printf 'scheduled_tasks.json\nagent-memory/\n' > "$OLOF/.claude/.gitignore"
 Copy the CLAUDE.md from the other machine as a starting point, then edit the machine-specific
 sections:
 - Cloud path (`OLOF` variable above)
-- Task tracker reference (Node/Express for work Mac; custom tracker TBD for a different machine)
+- Task tracker reference (Node/Express or custom tracker TBD depending on user's needs)
 - Knowledge-base description (work vault vs personal vault)
-- Remove or update any context specific to the other machine (e.g. SAP-specific paths)
+- Remove or update any context specific to the other machine
 
 ### 6. Add sync alias to `.zshrc`
 
