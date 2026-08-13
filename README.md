@@ -64,7 +64,7 @@ printf 'scheduled_tasks.json\nagent-memory/\n' > "$OLOF/.claude/.gitignore"
 Copy the CLAUDE.md from the other machine as a starting point, then edit the machine-specific
 sections:
 - Cloud path (`OLOF` variable above)
-- Task tracker reference (Node/Express for work Mac; custom tracker TBD for personal Mac)
+- Task tracker reference (Node/Express for work Mac; custom tracker TBD for a different machine)
 - Knowledge-base description (work vault vs personal vault)
 - Remove or update any context specific to the other machine (e.g. SAP-specific paths)
 
