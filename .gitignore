@@ -1,0 +1,7 @@
+*.log
+*.tmp
+.DS_Store
+agent-memory/
+scheduled_tasks.json
+CLAUDE.md
+settings.json
