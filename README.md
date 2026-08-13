@@ -1,6 +1,6 @@
 # claude-config
 
-Public repository of Claude Code agent definitions for an "olof" workspace (Onle Life One Folder).
+Public repository of Claude Code agent definitions for an "olof" workspace (One Life One Folder).
 Agent files are prompt text — no secrets, credentials, or personal data live here.
 
 ## What's in this repo
@@ -12,6 +12,12 @@ Agent files are prompt text — no secrets, credentials, or personal data live h
 
 These steps configure a new machine to use this shared agent set.
 An agent (HR-agent) can run them after `gh` and Claude Code are installed.
+
+## Commands
+
+`sync-agents` is a terminal alias to retrieve any update from the repository. Can be run in a scheduled way to receive the latest and greatest from the repository.
+
+Is the responsibility of the HR-agent to push changes to the repository when appropriate.
 
 ### Prerequisites
 
@@ -27,6 +33,8 @@ git clone https://github.com/duiliopastorelli/claude-config.git
 ```
 
 ### 2. Create the olof working root
+
+The olof folder is supposed to be backed up by a cloud storage service. The following options cover the most popular providers. Choose the appropriate one.
 
 **OneDrive:**
 ```bash
@@ -77,7 +85,7 @@ source ~/.zshrc
 
 ## Syncing agent changes
 
-Agent updates are written by HR-agent as normal. To propagate to the other machine:
+Agent updates are written by HR-agent as normal. To propagate to the other machines:
 
 **After an update on any machine:**
 ```bash
