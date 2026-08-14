@@ -66,6 +66,12 @@ If you cloned the official repository without forking, use `https://github.com/d
 
 The full path is `~/.claude/settings.json`. Create the file if it does not exist.
 
+### Optional settings
+
+| Key | Default | Description |
+|-----|---------|-------------|
+| `baAgentReviewIntervalDays` | `7` | How many days between BA-agent's periodic topic-cluster reviews. HAL checks this at session start and triggers BA-agent to report its domain clusters when the interval has elapsed, so it can recommend whether a new specialist agent is warranted. |
+
 ## Setting up a fresh machine
 
 These steps configure a new machine to use this shared agent set.
