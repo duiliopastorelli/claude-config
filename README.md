@@ -1,6 +1,8 @@
 # claude-config
 
-Public repository of Claude Code agent definitions designed for creating a team of agents.
+Public repository of Claude Code agent definitions designed for creating a team of agents for a Product Manager.
+
+Unfamiliar with Git? Provide this file to Claude and ask it to help you.
 
 ## Why use this repository
 
@@ -49,6 +51,20 @@ Run Claude directly from the project's folder, thanks to the agents living in th
 `sync agents` or `update agents` are Claude commands described in the HR-agent to retrieve any update from the repository and push any changes. Can be run in a scheduled way to receive the latest and greatest from the repository and keep everything in sync. The push function works only if the user owns the repository (fork). The default repository used is https://github.com/duiliopastorelli/claude-config. If you are working from a fork, ask Claude to update this reference.
 
 Is the responsibility of the HR-agent to push changes to the repository when appropriate.
+
+## Required settings.json configuration
+
+`settings.json` is never committed to Git (it may contain secrets), so each machine needs its own copy. At minimum, add the following key so HR-agent knows which remote repository to sync with:
+
+```json
+{
+  "gitRemote": "https://github.com/<your-github-username>/claude-config"
+}
+```
+
+If you cloned the official repository without forking, use `https://github.com/duiliopastorelli/claude-config` — but note you will not be able to push changes.
+
+The full path is `~/.claude/settings.json`. Create the file if it does not exist.
 
 ## Setting up a fresh machine
 

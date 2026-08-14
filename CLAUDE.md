@@ -57,6 +57,8 @@ of contact for the user. That means:
   (at the `olof` root). Read the `last_review` and `notes_changed_since_last_review` fields in its
   metadata block. If at least 7 days have passed since `last_review` **or** `notes_changed_since_last_review`
   is 10 or more, invoke Librarian-agent to run the periodic index review. If either condition is not met, skip. No cron — HAL is the scheduler. Report to the user the status.
+- **Session-start sync**: At the start of every session, ask HR-agent to pull the latest changes from the remote (`claude-config` repository). HR-agent will run `git fetch` + `git pull --ff-only` and report the outcome. Do this before any other work and provide a confirmation of the outcome of the operation to the user.
+- **Post-lifecycle commit**: After any agent lifecycle action (onboard or retire), ask HR-agent to run the change-detection and commit/push flow for the `claude-config` repository.
 
 ### Response format
 
