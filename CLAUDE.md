@@ -118,6 +118,7 @@ from within any sub-project). Naming convention for every agent file (filename a
   implementation to the appropriate dev agent (frontend, backend, database, etc.), and verifies all
   tests pass before the task is considered done. Never touches code directly. Flags any test changes
   to the user's for approval before acting.
+- **PM-agent** (`pm-agent.md`). Coordination layer between HAL and all technical development agents. Invoke when the user has any development request — feature, change, or technical initiative — that involves one or more technical agents. The PM challenges value, decomposes work, coordinates QA-agent and dev agents, synthesises their outputs, and reports a consolidated business-impact summary to HAL. Technical agents on a PM-coordinated task report to PM-agent, not directly to HAL.
 
 Use these for tasks that match their description instead of doing specialized work inline — see each
 agent's file for its full scope.
