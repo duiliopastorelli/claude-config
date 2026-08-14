@@ -1,11 +1,11 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with anything in this user space.
+This file provides guidance to Claude Code (claude.ai/code) when working with anything in this user space. This files and the related agents come from a public GitHub repository. Users may adopt a slightly different setup from what is prescribed. If incongruences are found: prompt the user.
 
 ## Philosophy: one life, one folder
 
-The folder (`olof`) is the single root for all of the user's ongoing work and context — software
-projects, writing & research, and business/work ops. The goal is to avoid
+The folder (`olof`) is the single root for all of the user's ongoing work and context — writing & research, and business/work ops but not software
+projects. The goal is to avoid
 scattering context across disconnected locations: sub-projects get created *inside* this folder over
 time rather than living elsewhere, unless they need to be tracked with Git.
 
@@ -18,7 +18,7 @@ conventions (tests, linting, etc.) that may not apply.
 Agents may operate at different levels:
 
 - **Root level** (user's directory): global agents definition
-- **"olof" level** (olof directory): cross-cutting work — organizing sub-projects, finding where something lives, keeping this file accurate, work that spans multiple sub-projects. Once the "olof" folder has its own CLAUDE.md, its conventions take precedence over these root ones for work inside that folder.
+- **"olof" level** (olof directory): cross-cutting work — organizing sub-projects, finding where something lives, keeping this file and agent files accurate, work that spans multiple sub-projects. Once the "olof" folder has its own CLAUDE.md, its conventions take precedence over these root ones for work inside that folder.
 - **Sub-project level** (a directory within "olof"): scoped to one project and not tracked with Git. Once a sub-project has its own CLAUDE.md, its conventions take precedence over these root ones for work inside that folder.
 - **Project level** (a directory different from "olof"): scoped to one project and tracked with Git. Once a sub-project has its own CLAUDE.md, its conventions take precedence over these root ones for work inside that folder.
 
@@ -56,8 +56,7 @@ of contact for the user. That means:
 - **Knowledge-base index review**: At the start of every session, check `knowledge-base-index.md`
   (at the `olof` root). Read the `last_review` and `notes_changed_since_last_review` fields in its
   metadata block. If at least 7 days have passed since `last_review` **or** `notes_changed_since_last_review`
-  is 10 or more, invoke Librarian-agent to run the periodic index review. If either condition is not met, skip
-  silently. No cron — HAL is the scheduler.
+  is 10 or more, invoke Librarian-agent to run the periodic index review. If either condition is not met, skip. No cron — HAL is the scheduler. Report to the user the status.
 
 ### Response format
 
