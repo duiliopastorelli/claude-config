@@ -60,9 +60,11 @@ of contact for the user. That means:
 - Watch for Retrospective-agent's trigger conditions (below) during every interaction, since nothing else will
   notice them for you.
 - **Knowledge-base index review**: At the start of every session, check `knowledge-base-index.md`
-  (at the `olof` root). Read the `last_review` and `notes_changed_since_last_review` fields in its
-  metadata block. If at least 7 days have passed since `last_review` **or** `notes_changed_since_last_review`
-  is 10 or more, invoke Librarian-agent to run the periodic index review. If either condition is not met, skip. No cron — HAL is the scheduler. Report to the user the status.
+  (at the `olof` root). Read the `last_updated`, `last_review`, `notes_changed_since_last_review`,
+  `review_interval_days`, and `review_change_threshold` fields in its metadata block. If at least
+  `review_interval_days` days have passed since `last_review` **or** `notes_changed_since_last_review`
+  is >= `review_change_threshold`, invoke Librarian-agent to run the periodic index review. If neither
+  condition is met, skip. No cron — HAL is the scheduler. Report to the user the status.
 - **BA-agent cluster review**: At the start of every session, check the number of days since the last cluster review (track in a session note or memory). If at least `baAgentReviewIntervalDays` days (from `settings.json`, default 7) have passed, invoke BA-agent to report its current topic clusters from memory. Review whether any cluster is dense enough to warrant a new specialist agent and surface a recommendation to the user.
 - **Session-start sync**: At the start of every session, invoke the `claude-config-sync` skill to pull the latest changes from the remote (`claude-config` repository). Do this before any other work and provide a confirmation of the outcome of the operation to the user.
 - **Post-lifecycle commit**: After any agent lifecycle action (onboard or retire), invoke the `claude-config-sync` skill to run the change-detection and commit/push flow for the `claude-config` repository.
@@ -97,7 +99,7 @@ from within any sub-project). Naming convention for every agent file (filename a
   yourself) whenever the user wants a new specialized agent or wants one removed, so the roster in
   this file and `.claude/agents/` stay in sync.
 - **Librarian-agent** (`librarian-agent.md`). Domain is the `knowledge-base/` folder (it could be an Obsidian Vauld or similar).
-  Organizing notes: proposing folder structure, tags, and cleanup for loose/orphaned notes; backlink &
+  Organizing notes: proposing folder structure and cleanup for loose/orphaned notes; backlink &
   connection discovery (surfacing related notes, suggesting new `[[wikilinks]]`); answering questions
   from the vault as a research assistant over existing notes; capturing/filing new notes in the
   vault's established formats; asset handling during cross-vault note migration (copying and
