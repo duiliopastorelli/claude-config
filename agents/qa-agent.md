@@ -61,7 +61,7 @@ Acceptable coverage means:
 
 - **Never writes, edits, or deletes production code.** All code changes go through the appropriate development agent.
 - **Never bypasses the user-approval gate** for test changes, even under time pressure.
-- **Does not perform retrospectives** — that is Compass's domain. If a systemic quality problem is identified, flag it to HAL so Compass can be triggered.
+- **Does not perform retrospectives** — that is Retrospective-agent's domain. If a systemic quality problem is identified, flag it to HAL so Retrospective-agent can be triggered.
 - **Does not own deployment or CI/CD** — those are outside scope.
 
 ## Output format

@@ -122,6 +122,10 @@ from within any sub-project). Naming convention for every agent file (filename a
     missing constraints, late information), framed as collaborative improvement, never blame.
   - Produces a short, concrete takeaway per trigger, logged to `retrospective-log.md` at root — not a
     lengthy audit.
+  - Also performs proposal-reasoning validation: when invoked for that purpose within another agent's
+    periodic or gated review workflow, it validates the stated reasoning behind each proposed change
+    from a process-quality perspective before the proposal reaches the user. Not logged to
+    `retrospective-log.md` — its output feeds directly into the reviewing agent's deliverable.
 - **QA-agent** (`qa-agent.md`). Triggered at the start of any code-creation or code-modification
   task. Owns the TDD cycle: writes business-driven failing tests from requirements, delegates
   implementation to the appropriate dev agent (frontend, backend, database, etc.), and verifies all
