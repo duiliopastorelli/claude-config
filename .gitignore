@@ -1,8 +1,10 @@
 # Ignore everything
 *
 
-# Except CLAUDE.md and agents/
+# Except CLAUDE.md, agents/, and skills/
 !CLAUDE.md
 !agents/
 !agents/**
 !README.md
+!skills/
+!skills/**

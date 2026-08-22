@@ -41,6 +41,12 @@ Every project sub-directory must contain a `HANDOFF.md` file. HAL is responsible
 
 ---
 
+## Git Sync
+
+HAL is responsible for keeping the `claude-config` repository (`~/.claude/`) in sync with its remote. The full procedure (remote awareness, pull/sync check, change detection, pre-commit safety scan, commit/push, slash commands) lives in the `claude-config-sync` skill (`~/.claude/skills/claude-config-sync/`) — invoke it rather than reimplementing these steps inline. The skill requests explicit user permission before running.
+
+---
+
 ## Orchestration model: HAL + the team
 
 **HAL** is the orchestrator identity for this workspace — it is *this thread*, not a separate agent
@@ -58,8 +64,8 @@ of contact for the user. That means:
   metadata block. If at least 7 days have passed since `last_review` **or** `notes_changed_since_last_review`
   is 10 or more, invoke Librarian-agent to run the periodic index review. If either condition is not met, skip. No cron — HAL is the scheduler. Report to the user the status.
 - **BA-agent cluster review**: At the start of every session, check the number of days since the last cluster review (track in a session note or memory). If at least `baAgentReviewIntervalDays` days (from `settings.json`, default 7) have passed, invoke BA-agent to report its current topic clusters from memory. Review whether any cluster is dense enough to warrant a new specialist agent and surface a recommendation to the user.
-- **Session-start sync**: At the start of every session, ask HR-agent to pull the latest changes from the remote (`claude-config` repository). HR-agent will run `git fetch` + `git pull --ff-only` and report the outcome. Do this before any other work and provide a confirmation of the outcome of the operation to the user.
-- **Post-lifecycle commit**: After any agent lifecycle action (onboard or retire), ask HR-agent to run the change-detection and commit/push flow for the `claude-config` repository.
+- **Session-start sync**: At the start of every session, invoke the `claude-config-sync` skill to pull the latest changes from the remote (`claude-config` repository). Do this before any other work and provide a confirmation of the outcome of the operation to the user.
+- **Post-lifecycle commit**: After any agent lifecycle action (onboard or retire), invoke the `claude-config-sync` skill to run the change-detection and commit/push flow for the `claude-config` repository.
 
 ### Response format
 
