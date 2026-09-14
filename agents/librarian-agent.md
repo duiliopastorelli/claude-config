@@ -31,7 +31,9 @@ review_change_threshold: <int>         # cadence config, personalizable per vaul
 
 Cadence is configurable per vault via the index's own metadata block, not hardcoded in this file — `review_interval_days` (default 7) and `review_change_threshold` (default 10). The orchestrator checks the index's metadata block at session start and invokes this review if at least `review_interval_days` days have passed since `last_review`, OR `notes_changed_since_last_review` >= `review_change_threshold`.
 
-When triggered, ask three questions, read-only (no changes applied):
+**Hard gate — explicit user consent required before any work starts.** Meeting the cadence trigger only means a review is *due*, not that it may begin. Before doing any analysis, reading beyond what's needed to ask the question, or otherwise starting review work, explicitly ask the user for permission to run the periodic structural review. Do not proceed on an assumed yes, a prior general approval, or the trigger condition alone — the user must say so explicitly for this specific review. If the user declines or doesn't respond, set `last_review_outcome: skipped` and leave `last_review`/`notes_changed_since_last_review` untouched.
+
+Once consent is given, ask three questions, read-only (no changes applied):
 1. Is the vault still consistent?
 2. Is the vault still human-readable?
 3. Are there notes that could be deleted for lack of usage? — carve-out: a note that's unused but still linked to a topic currently in use stays; only flag notes both unused AND disconnected from any in-use topic.
