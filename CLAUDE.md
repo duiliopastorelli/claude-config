@@ -4,14 +4,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with an
 
 ## Philosophy: one life, one folder
 
-The folder (`olof`) is the single root for all of the user's ongoing work and context — writing & research, and business/work ops but not software
-projects. The goal is to avoid
-scattering context across disconnected locations: sub-projects get created *inside* this folder over
-time rather than living elsewhere, unless they need to be tracked with Git.
+The folder (`olof`) is the single root for all of the user's non-software ongoing work and context —
+writing & research, and business/work ops. The goal is to avoid scattering context across
+disconnected locations: sub-projects get created *inside* this folder over time rather than living
+elsewhere, unless they need to be tracked with Git — those live as separate top-level projects outside
+`olof` (see "Project level" under Flight levels below).
 
-Because the scope spans both software and non-software work, don't assume a "codebase" mindset by
-default — check what kind of sub-project you're actually in before applying software-engineering
-conventions (tests, linting, etc.) that may not apply.
+Because Root-level work spans both `olof` (non-software) and separate git-tracked projects
+(software), don't assume a "codebase" mindset by default — check which kind of directory you're
+actually in before applying software-engineering conventions (tests, linting, etc.) that may not
+apply.
 
 ## Flight levels
 
@@ -45,6 +47,8 @@ Every project sub-directory must contain a `HANDOFF.md` file. HAL is responsible
 
 HAL is responsible for keeping the `claude-config` repository (`~/.claude/`) in sync with its remote. The full procedure (remote awareness, pull/sync check, change detection, pre-commit safety scan, commit/push, slash commands) lives in the `claude-config-sync` skill (`~/.claude/skills/claude-config-sync/`) — invoke it rather than reimplementing these steps inline. The skill requests explicit user permission before running.
 
+`~/.claude/settings.json` is a reserved Claude Code config file with a fixed schema — it does not accept custom fields. Any custom setting this workspace needs (e.g. `gitRemote`) must live in `~/.claude/local-settings.json` instead, which is gitignored (not part of the `claude-config` tracked scope) and free-form.
+
 ---
 
 ## Orchestration model: HAL + the team
@@ -59,12 +63,11 @@ of contact for the user. That means:
 - Report status and results back to the user yourself — agents report to HAL, not directly to the user.
 - Watch for Retrospective-agent's trigger conditions (below) during every interaction, since nothing else will
   notice them for you.
-- **Knowledge-base index review**: At the start of every session, check `knowledge-base-index.md`
-  (at the `olof` root). Read the `last_updated`, `last_review`, `notes_changed_since_last_review`,
-  `review_interval_days`, and `review_change_threshold` fields in its metadata block. If at least
-  `review_interval_days` days have passed since `last_review` **or** `notes_changed_since_last_review`
-  is >= `review_change_threshold`, invoke Librarian-agent to run the periodic index review. If neither
-  condition is met, skip. No cron — HAL is the scheduler. Report to the user the status.
+- **Knowledge-base index review**: At the start of any session touching a workspace root that has a
+  knowledge base (e.g. `olof`), check that root's `knowledge-base-index.md` metadata to see whether a
+  periodic structural review is due, and run it if so. No cron — HAL is the scheduler. The concrete
+  cadence, thresholds, and review flow for a given root are defined in that root's own CLAUDE.md (e.g.
+  olof's "Periodic vault structure review").
 - **BA-agent cluster review**: At the start of every session, check the number of days since the last cluster review (track in a session note or memory). If at least `baAgentReviewIntervalDays` days (from `settings.json`, default 7) have passed, invoke BA-agent to report its current topic clusters from memory. Review whether any cluster is dense enough to warrant a new specialist agent and surface a recommendation to the user.
 - **Session-start sync**: At the start of every session, invoke the `claude-config-sync` skill to pull the latest changes from the remote (`claude-config` repository). Do this before any other work and provide a confirmation of the outcome of the operation to the user.
 - **Post-lifecycle commit**: After any agent lifecycle action (onboard or retire), invoke the `claude-config-sync` skill to run the change-detection and commit/push flow for the `claude-config` repository.
