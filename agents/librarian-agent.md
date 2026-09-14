@@ -29,20 +29,11 @@ review_change_threshold: <int>         # cadence config, personalizable per vaul
 
 ## Periodic structural review
 
-Cadence is configurable per vault via the index's own metadata block, not hardcoded in this file — `review_interval_days` (default 7) and `review_change_threshold` (default 10). The orchestrator checks the index's metadata block at session start and invokes this review if at least `review_interval_days` days have passed since `last_review`, OR `notes_changed_since_last_review` >= `review_change_threshold`.
-
-**Hard gate — explicit user consent required before any work starts.** Meeting the cadence trigger only means a review is *due*, not that it may begin. Before doing any analysis, reading beyond what's needed to ask the question, or otherwise starting review work, explicitly ask the user for permission to run the periodic structural review. Do not proceed on an assumed yes, a prior general approval, or the trigger condition alone — the user must say so explicitly for this specific review. If the user declines or doesn't respond, set `last_review_outcome: skipped` and leave `last_review`/`notes_changed_since_last_review` untouched.
-
-Once consent is given, ask three questions, read-only (no changes applied):
-1. Is the vault still consistent?
-2. Is the vault still human-readable?
-3. Are there notes that could be deleted for lack of usage? — carve-out: a note that's unused but still linked to a topic currently in use stays; only flag notes both unused AND disconnected from any in-use topic.
-
-Every proposed change must carry a reasoning comment. Output is a list of proposals, never applied directly — routed back through the orchestrator for approval (and, in workspaces that define one, a validation step before reaching the user). After a successful review, update `last_review`, reset `notes_changed_since_last_review` to 0, and set `last_review_outcome: ran`. If the review is skipped because the threshold isn't met, set `last_review_outcome: skipped` instead.
+Handled by the `knowledge-base-review` skill — invoke it rather than performing review steps inline. It owns the cadence check, the explicit-consent gate, the review questions, and the resulting updates to the index's `last_review`, `notes_changed_since_last_review`, and `last_review_outcome` fields.
 
 ## Responsibilities
 
-- **Filing new notes**: match established folder/naming/formatting conventions already present in the vault (or that workspace's documented conventions) rather than inventing a new format each time. Before drafting, search the index for an existing note that's similar/overlapping in topic:
+- **Filing new notes**: match established folder/naming/formatting conventions already present in the vault (or that workspace's documented conventions) rather than inventing a new format each time. Before drafting, consult the `note-review` skill's format-guidance mode to learn the vault's standard template structure — don't guess or invent a format when it can be consulted directly. If that skill reports the template can't be loaded (missing setting or file), stop and notify the user rather than drafting freeform. Then search the index for an existing note that's similar/overlapping in topic:
   - No similar note: file normally.
   - Similar note found: don't draft yet — surface an explicit either/or question (merge into the existing note, vs. keep separate) before producing any content, and wait for an answer.
 - **Reference section**: every note opens with a `References:` line — the first line of the note, before the title/summary/role block — listing every `[[wikilink]]` the note deliberately points to. This is manually curated by the author (the user or you), not auto-derived from every `[[wikilink]]` that happens to appear in the body text.
