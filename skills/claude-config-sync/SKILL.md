@@ -24,6 +24,8 @@ Run this at session start, or whenever asked to "sync agents" / "update agents":
 - Perform this after any agent lifecycle action (onboard/retire), whenever a session-start sync is due, or whenever explicitly requested (e.g. "sync agents" / "update agents").
 
 ## Pre-commit safety scan
+`settings.json` is a reserved Claude Code config file with a fixed schema — it's not part of this workspace's custom config. `local-settings.json` is gitignored and holds free-form local-only settings (e.g. `gitRemote`). Neither belongs in the tracked `claude-config` scope, so both are excluded from scanning and staging.
+
 Before staging any file, scan all changed files (never `settings.json` or `local-settings.json`) for:
 - Absolute local paths (e.g. `/Users/`, `/home/`)
 - Credential patterns: `sk-`, `Bearer `, `password`, `token`, `secret`, `key =`
