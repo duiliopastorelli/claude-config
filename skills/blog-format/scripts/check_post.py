@@ -226,15 +226,32 @@ def check(article_path, cfg, mode):
 
     # ---- body
     in_code = False
+    in_comment = False
+    comment_lines = []
     prose_words = 0
     footnote_refs, footnote_defs = {}, {}
     for lineno, raw in body:
-        if raw.strip().startswith("```"):
+        if raw.strip().startswith("```") and not in_comment:
             in_code = not in_code
             continue
         if in_code:
             continue
-        line = re.sub(r"`[^`]*`", "", raw)  # ignore inline code
+        # HTML comments aren't rendered, so skip them (but remember them for publish mode)
+        line = raw
+        if in_comment:
+            comment_lines.append(lineno)
+            if "-->" not in line:
+                continue
+            in_comment = False
+            line = line.split("-->", 1)[1]
+        line = re.sub(r"<!--.*?-->", "", line)
+        if "<!--" in line:
+            comment_lines.append(lineno)
+            in_comment = True
+            line = line.split("<!--", 1)[0]
+        if not line.strip():
+            continue
+        line = re.sub(r"`[^`]*`", "", line)  # ignore inline code
 
         mdef = re.match(r"^\[\^([^\]]+)\]:\s*(.*)$", line)
         if mdef:
@@ -280,6 +297,12 @@ def check(article_path, cfg, mode):
 
     if in_code:
         report.add("ERROR", "unclosed ``` code block")
+    if in_comment:
+        report.add("ERROR", "unclosed <!-- HTML comment in the body")
+    if comment_lines:
+        level = "WARN" if strict else "INFO"
+        report.add(level, f"HTML comment(s) in the body (from line {comment_lines[0]}): not shown on the page "
+                          "but readable in the page source; remove author notes before publishing")
 
     if cfg.get("sources_as_footnotes", False):
         for ref, ln in footnote_refs.items():
@@ -288,7 +311,10 @@ def check(article_path, cfg, mode):
         for d, ln in footnote_defs.items():
             if d not in footnote_refs:
                 report.add("WARN", f"footnote [^{d}] is defined but never referenced", ln)
+        skip = set(comment_lines)
         for lineno, raw in body:
+            if lineno in skip:
+                continue
             if re.match(r"^#{1,6}\s*(sources|references|bibliography)\s*$", raw.strip(), re.I):
                 report.add("WARN", "a Sources/References section was found; the style guide wants sources as footnotes", lineno)
 
