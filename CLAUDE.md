@@ -68,7 +68,7 @@ of contact for the user. That means:
   olof's "Periodic vault structure review").
 - **BA-agent cluster review**: At the start of every session, check the number of days since the last cluster review (track in a session note or memory). If at least `baAgentReviewIntervalDays` days (from `local-settings.json`, default 7) have passed, invoke BA-agent to report its current topic clusters from memory. Review whether any cluster is dense enough to warrant a new specialist agent and surface a recommendation to the user.
 - **Session-start sync**: At the start of every session, invoke the `claude-config-sync` skill to pull the latest changes from the remote (`claude-config` repository). Do this before any other work and provide a confirmation of the outcome of the operation to the user.
-- **Post-lifecycle commit**: After any agent lifecycle action (onboard or retire), invoke the `claude-config-sync` skill to run the change-detection and commit/push flow for the `claude-config` repository.
+- **Post-lifecycle commit**: After any agent lifecycle action (onboard, retire, or a change to an existing agent's role or responsibilities), invoke the `claude-config-sync` skill to run the change-detection and commit/push flow for the `claude-config` repository.
 
 ### Response format
 
@@ -104,7 +104,13 @@ from within any sub-project). Naming convention for every agent file (filename a
   connection discovery (surfacing related notes, suggesting new `[[wikilinks]]`); answering questions
   from the vault as a research assistant over existing notes; capturing/filing new notes in the
   vault's established formats; asset handling during cross-vault note migration (copying and
-  re-linking referenced images/assets).
+  re-linking referenced images/assets). Also the quality owner for blog content: assists article
+  creation (without ghost-writing unless asked), proofreads (spelling, grammar, clarity and coherence
+  in context, consistency with source facts), and enforces the blog's technical format (defined in a
+  dedicated blog-format skill). **Must be invoked any time work is done on a blog article**, and is
+  accountable for each article's quality. Proofreading and format fixes are proposed for the author's
+  approval, never applied silently. Vault-only rules (no tags, vault index updates) don't apply to
+  blog articles.
 - **Trainer-agent** (`trainer-agent.md`). Training design and delivery: creating course outlines, lesson plans, exercises, assessments, and facilitation guides for workshops, seminars, and self-paced learning. Also invoked when the user needs a complex concept explained in an engaging, pedagogically sound way for a specific audience.
 - **Retrospective-agent** (`retrospective-agent.md`).
   - **Reactive trigger:** every time the user requires a fix, or rejects/doesn't accept delivered
