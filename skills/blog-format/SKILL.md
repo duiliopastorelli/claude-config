@@ -43,7 +43,9 @@ Don't silently assume a default. The author chose per-article answers on purpose
    - the brief block with the answers;
    - the platform header, with every required attribute present. Where a value isn't known yet, use the explicit placeholder format the style guide gives (e.g. a date placeholder with a worked example), so the expected format is visible in the file;
    - the separator line, and an empty body, or the author's own outline/skeleton if they supplied one.
-4. Offer a **skeleton of guiding topics**: suggested `##` sections, each with the questions it should answer, written as prompts and not as prose. Many authors find it easier to write from a skeleton than from a blank page. Add it only if the author accepts, and keep it free of draft content, since the prose is theirs to write.
+4. Offer a **skeleton of guiding topics**: suggested `##` sections, each with the questions it should answer, written as prompts and not as prose. Many authors find it easier to write from a skeleton than from a blank page. Add it only if the author accepts, and keep it free of draft content, since the prose is theirs to write. Two gates apply:
+   - **Goal and thesis first.** Don't propose a skeleton until the author has agreed what the post is for (e.g. an opinion, a story, a how-to) and has stated its point in one sentence. Record both in the brief. A skeleton without a thesis invites the author to answer every prompt, and the post then drifts between several ideas.
+   - **Size it to the length.** Derive the number of sections from the brief's length target (roughly one `##` per 150–200 words), and give each section a word budget, so the budgets add up to the target. Every section must serve the thesis. Park any extra ideas as future posts.
 5. Run the checker (see "Running the checker") and report what is still to be filled in. Placeholders are expected at this stage, so present them as a to-do list, not as failures.
 
 ## Mode 2: reviewing or proofreading an article
