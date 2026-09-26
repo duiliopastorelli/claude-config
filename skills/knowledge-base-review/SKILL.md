@@ -11,6 +11,8 @@ Describes how to perform a periodic structural review of a notes/knowledge-base 
 
 Cadence is configurable per vault via the vault index's own metadata block: `review_interval_days` (default 7) and `review_change_threshold` (default 10). A review becomes due when at least `review_interval_days` days have passed since `last_review`, OR `notes_changed_since_last_review` >= `review_change_threshold`.
 
+**Counting changes.** The stored counter only sees agent edits, so when checking whether a review is due, count the vault's notes (excluding templates and hidden folders such as `.obsidian/`) whose file modification time is later than `last_review`, and use the higher of that count and `notes_changed_since_last_review`. This catches edits the user made directly in their notes app. Caveats: cloud-sync clients can occasionally touch modification times without a real edit, and an agent bulk edit on review day resets the baseline for every note it touched — treat the count as a signal, not an exact figure.
+
 Being due only means the review *may* be offered — it does not authorize starting it.
 
 ## Hard gate — explicit user consent required
